@@ -20,11 +20,25 @@ const Content = (props) => {
   );
 };
 
+const Total = (props) => {
+  return (
+    <h4>
+      Number of {" "}
+      {props.parts[0].exercises +
+        props.parts[1].exercises +
+        props.parts[2].exercises +
+        props.parts[3].exercises}
+        exercises
+    </h4>
+  );
+};
+
 const Course = (props) => {
   return (
     <div>
       <Header name={props.course.name} />
       <Content parts={props.course.parts} />
+      <Total parts={props.course.parts} />
     </div>
   );
 };
