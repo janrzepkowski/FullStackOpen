@@ -11,26 +11,19 @@ const Part = (props) => {
 };
 
 const Content = (props) => {
-  return (
-    <div>
-      <Part part={props.parts[0].name} exercise={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercise={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercise={props.parts[2].exercises} />
-    </div>
-  );
+  const content = props.parts.map((part) => (
+    <Part key={part.id} part={part.name} exercise={part.exercises} />
+  ));
+
+  return <div>{content}</div>;
 };
 
-const Total = (props) => {
-  return (
-    <h4>
-      Number of {" "}
-      {props.parts[0].exercises +
-        props.parts[1].exercises +
-        props.parts[2].exercises +
-        props.parts[3].exercises}
-        exercises
-    </h4>
-  );
+const Total = ({ parts }) => {
+  const total = parts.reduce((s, p) => {
+    return s + p.exercises;
+  }, 0);
+
+  return <h4>total of {total} exercises</h4>;
 };
 
 const Course = (props) => {
