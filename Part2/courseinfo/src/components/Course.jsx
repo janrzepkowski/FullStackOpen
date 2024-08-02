@@ -1,5 +1,5 @@
 const Header = (props) => {
-  return <h1>{props.name}</h1>;
+  return <h2>{props.name}</h2>;
 };
 
 const Part = (props) => {
