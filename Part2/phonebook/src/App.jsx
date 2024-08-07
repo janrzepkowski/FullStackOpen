@@ -1,5 +1,41 @@
 import { useState } from "react";
 
+const Filter = ({ filter, handleFilterChange }) => (
+  <div>
+    filter shown with <input value={filter} onChange={handleFilterChange} />
+  </div>
+);
+
+const PersonForm = ({
+  newName,
+  newNumber,
+  handleNameChange,
+  handleNumberChange,
+  addPerson,
+}) => (
+  <form onSubmit={addPerson}>
+    <div>
+      name: <input value={newName} onChange={handleNameChange} />
+    </div>
+    <div>
+      number: <input value={newNumber} onChange={handleNumberChange} />
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+);
+
+const Persons = ({ personsToShow }) => (
+  <div>
+    {personsToShow.map((person) => (
+      <div key={person.name}>
+        {person.name} {person.number}
+      </div>
+    ))}
+  </div>
+);
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -47,27 +83,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={filter} onChange={handleFilterChange} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
+      <h2>Add a new</h2>
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addPerson={addPerson}
+      />
       <h2>Numbers</h2>
-      {personsToShow.map((person) => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      <Persons personsToShow={personsToShow} />
     </div>
   );
 };
