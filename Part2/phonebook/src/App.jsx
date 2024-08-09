@@ -45,6 +45,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [notification, setNotification] = useState(null);
+  const [notificationType, setNotificationType] = useState("notification");
 
   useEffect(() => {
     phonebookService.getAll().then((initialPersons) => {
@@ -101,6 +102,21 @@ const App = () => {
           );
           setNewName("");
           setNewNumber("");
+          setNotification(`Updated ${returnedPerson.name}`);
+          setNotificationType("notification");
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setNotification(
+            `Information of ${existingPerson.name} has already been removed from server`
+          );
+          setNotificationType("error");
+          setPersons(persons.filter((p) => p.id !== existingPerson.id));
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
         });
     }
   };
@@ -126,7 +142,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification} type={notificationType} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm

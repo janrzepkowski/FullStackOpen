@@ -1,11 +1,13 @@
 import "../index.css";
 
-const Notification = ({ message }) => {
-    if (message === null) {
-      return null;
-    }
-  
-    return <div className="notification">{message}</div>;
-  };
-  
-  export default Notification;
+const Notification = ({ message, type }) => {
+  if (message === null) {
+    return null;
+  }
+
+  const notificationStyle = type === "error" ? "error" : "notification";
+
+  return <div className={notificationStyle}>{message}</div>;
+};
+
+export default Notification;
