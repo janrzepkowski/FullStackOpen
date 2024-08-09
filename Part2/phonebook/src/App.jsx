@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+const baseUrl = "http://localhost:3001/persons";
+
 const Filter = ({ filter, handleFilterChange }) => (
   <div>
     filter shown with <input value={filter} onChange={handleFilterChange} />
@@ -44,7 +46,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get(baseUrl).then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -58,9 +60,11 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewNumber("");
+      axios.post(baseUrl, personObject).then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
