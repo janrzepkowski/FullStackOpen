@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import phonebookService from "./services/phonebook";
+import Person from "./components/Person";
 
 const Filter = ({ filter, handleFilterChange }) => (
   <div>
@@ -27,11 +28,11 @@ const PersonForm = ({
   </form>
 );
 
-const Persons = ({ personsToShow }) => (
+const Persons = ({ personsToShow, removePerson }) => (
   <div>
     {personsToShow.map((person) => (
-      <div key={person.name}>
-        {person.name} {person.number}
+      <div key={person.id}>
+        <Person person={person} deletePerson={() => removePerson(person.id)} />
       </div>
     ))}
   </div>
@@ -62,6 +63,15 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+
+  const removePerson = (id) => {
+    const person = persons.find((p) => p.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phonebookService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
       });
     }
   };
@@ -97,7 +107,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} removePerson={removePerson} />
     </div>
   );
 };
