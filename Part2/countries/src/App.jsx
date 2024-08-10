@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
-import Country from "./components/country";
 import Countries from "./components/Countries";
 import countriesService from "./services/countries";
 
@@ -28,11 +27,7 @@ const App = () => {
     <div>
       <h1>Countries</h1>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      {countriesToShow.length === 1 ? (
-        <Country country={countriesToShow[0]} />
-      ) : (
-        <Countries countries={countriesToShow} />
-      )}
+      <Countries countries={countriesToShow} />
     </div>
   );
 };
