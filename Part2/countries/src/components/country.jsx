@@ -1,8 +1,10 @@
+import Weather from "./Weather";
+
 const Country = ({ country }) => {
   return (
     <div>
       <h1>{country.name.common}</h1>
-      <div>capital {country.capital[0]}</div>
+      <div>capital {country.capital}</div>
       <div>area {country.area}</div>
       <h2>languages:</h2>
       <ul>
@@ -11,6 +13,7 @@ const Country = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.png} alt={`flag of ${country.name.common}`} />
+      <Weather capital={country.capital} />
     </div>
   );
 };
