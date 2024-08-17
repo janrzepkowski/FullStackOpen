@@ -24,6 +24,11 @@ let persons = [
   },
 ];
 
+let info = `
+  <p>Phonebook has info for ${persons.length} people</p>
+  <p>${new Date()}</p>
+`;
+
 app.use(express.json());
 
 app.get("/", (request, response) => {
@@ -32,6 +37,10 @@ app.get("/", (request, response) => {
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
+});
+
+app.get("/api/info", (request, response) => {
+  response.send(info);
 });
 
 const PORT = 3001;
