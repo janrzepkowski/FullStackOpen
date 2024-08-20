@@ -30,7 +30,12 @@ let info = `
   <p>${new Date()}</p>
 `;
 
-app.use(morgan('tiny'));
+morgan.token("body", (req) => JSON.stringify(req.body));
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
+
 app.use(express.json());
 
 app.get("/", (request, response) => {
