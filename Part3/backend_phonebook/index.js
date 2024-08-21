@@ -1,6 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const app = express();
+
+app.use(cors());
 
 let persons = [
   {
@@ -52,7 +55,6 @@ app.get("/api/persons/:id", (request, response) => {
   if (person) {
     response.json(person);
   } else {
-    console.log("x");
     response.status(404).end();
   }
 });
