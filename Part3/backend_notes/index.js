@@ -91,6 +91,26 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
+app.put("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const body = request.body;
+
+  const note = notes.find((note) => note.id === id);
+  if (!note) {
+    return response.status(404).json({ error: "note not found" });
+  }
+
+  const updatedNote = {
+    ...note,
+    content: body.content,
+    important: body.important,
+  };
+
+  notes = notes.map((note) => (note.id !== id ? note : updatedNote));
+
+  response.json(updatedNote);
+});
+
 app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 3001;
