@@ -1,28 +1,10 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const app = express();
 require("dotenv").config();
 
-const url = process.env.MONGODB_URI;
+const Note = require("./models/note");
 
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
-
-const app = express();
+let notes = [];
 
 app.use(express.static("dist"));
 
@@ -55,40 +37,27 @@ app.get("/api/notes", (request, response) => {
   });
 });
 
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
 app.post("/api/notes", (request, response) => {
   const body = request.body;
 
-  if (!body.content) {
-    return response.status(400).json({
-      error: "content missing",
-    });
+  if (body.content === undefined) {
+    return response.status(400).json({ error: "content missing" });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
-
-  response.json(note);
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-  if (note) {
+  Note.findById(request.params.id).then((note) => {
     response.json(note);
-  } else {
-    console.log("x");
-    response.status(404).end();
-  }
+  });
 });
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -99,28 +68,23 @@ app.delete("/api/notes/:id", (request, response) => {
 });
 
 app.put("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
   const body = request.body;
 
-  const note = notes.find((note) => note.id === id);
-  if (!note) {
-    return response.status(404).json({ error: "note not found" });
-  }
-
-  const updatedNote = {
-    ...note,
+  const note = {
     content: body.content,
     important: body.important,
   };
 
-  notes = notes.map((note) => (note.id !== id ? note : updatedNote));
-
-  response.json(updatedNote);
+  Note.findByIdAndUpdate(request.params.id, note, { new: true }).then(
+    (updatedNote) => {
+      response.json(updatedNote);
+    }
+  );
 });
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
