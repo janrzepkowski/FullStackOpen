@@ -63,15 +63,26 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      phonebookService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
-        setNotification(`Added ${returnedPerson.name}`);
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
-      });
+      phonebookService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
+          setNotification(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setNotification(
+            `Person validation failed: name: Path \`name\` (\`${newName}\`) is shorter than the minimum allowed length (3).`
+          );
+          setNotificationType("error");
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
     }
   };
 
