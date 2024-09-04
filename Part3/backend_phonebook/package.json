@@ -19,6 +19,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "eslint": "^9.9.1",
     "nodemon": "^3.1.4"
   }
 }
