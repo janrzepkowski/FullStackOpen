@@ -70,14 +70,27 @@ const App = () => {
           setNewName("");
           setNewNumber("");
           setNotification(`Added ${returnedPerson.name}`);
+          setNotificationType("notification");
           setTimeout(() => {
             setNotification(null);
           }, 5000);
         })
         .catch((error) => {
-          setNotification(
-            `Person validation failed: name: Path \`name\` (\`${newName}\`) is shorter than the minimum allowed length (3).`
-          );
+          if (
+            error.response.data.includes(
+              "is shorter than the minimum allowed length"
+            )
+          ) {
+            setNotification(
+              `Person validation failed: name: Path \`name\` (\`${newName}\`) is shorter than the minimum allowed length (3).`
+            );
+          } else if (
+            error.response.data.includes("is not a valid phone number")
+          ) {
+            setNotification(
+              `Person validation failed: number: Path \`number\` (\`${newNumber}\`) is not a valid phone number.`
+            );
+          }
           setNotificationType("error");
           setTimeout(() => {
             setNotification(null);
